@@ -2,21 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animal_shelter/HomePage.dart';
 import 'package:flutter_animal_shelter/textbox.dart';
 
-class addPet extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() => _addPet();
-}
+class Update extends StatefulWidget {
+  final Client _client;
 
-class _addPet extends State<addPet> {
+  const Update(this._client);
+
+  @override
+  State<StatefulWidget> createState() => _Update();
+} // end Update class
+
+class _Update extends State<Update> {
   late TextEditingController controllerName;
   late TextEditingController controllerSurnameName;
   late TextEditingController controllerNumber;
 
   @override
   void initState() {
-    controllerName = new TextEditingController();
-    controllerSurnameName = new TextEditingController();
-    controllerNumber = new TextEditingController();
+    Client c = widget._client;
+    controllerName = new TextEditingController(text: c.name);
+    controllerSurnameName = new TextEditingController(text: c.Surname);
+    controllerNumber = new TextEditingController(text: c.phone);
+
     super.initState();
   }
 
@@ -24,7 +30,7 @@ class _addPet extends State<addPet> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("add an object"),
+        title: Text("Update Object"),
       ),
       body: ListView(
         children: [
@@ -40,10 +46,9 @@ class _addPet extends State<addPet> {
                   Navigator.pop(context, new Client(name, Surname, phone));
                 }
               },
-              child: Text("add object"))
+              child: Text("update object"))
         ],
       ),
     );
-  } //build
-
-}
+  }
+}// end _Update class

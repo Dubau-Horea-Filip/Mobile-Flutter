@@ -1,7 +1,9 @@
 // ignore_for_file: file_names
 
 import 'package:flutter/material.dart';
+import 'package:flutter_animal_shelter/Update.dart';
 import 'package:flutter_animal_shelter/add.dart';
+import 'package:flutter_animal_shelter/messageResponse.dart';
 
 class MyHomePage extends StatefulWidget {
   final String _title;
@@ -34,17 +36,33 @@ class _MyhomePage extends State<MyHomePage> {
           itemCount: clients.length,
           itemBuilder: (context, index) {
             return ListTile(
-              onTap: () {},
-              onLongPress: () {},
+              onTap: () {
+                Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (_) => Update(clients[index])))
+                    .then((newObject) {
+                  if (newObject != null) {
+                    setState(() {
+                      clients.removeAt(index);
+                      clients.insert(index, newObject);
+                      MessageRrsponse(context, newObject.name + " was updated");
+                    });
+                  }
+                });
+              },
+              onLongPress: () {
+                removeObject(context, clients[index]);
+              },
               title: Text(clients[index].name + " " + clients[index].Surname),
               subtitle: Text(clients[index].phone),
               leading: CircleAvatar(
                 child: Text(clients[index].name.substring(0, 1)),
               ),
-              // trailing: Icon(
-              //   Icons.call,
-              //   color: Colors.red,
-              // ),
+              trailing: Icon(
+                Icons.call,
+                color: Colors.red,
+              ),
             );
           }),
       floatingActionButton: FloatingActionButton(
@@ -54,6 +72,7 @@ class _MyhomePage extends State<MyHomePage> {
             if (Object != null) {
               setState(() {
                 clients.add(Object);
+                MessageRrsponse(context, Object.name + " was added");
               });
             }
           });
@@ -62,6 +81,32 @@ class _MyhomePage extends State<MyHomePage> {
         child: Icon(Icons.add),
       ),
     );
+  }
+
+  removeObject(BuildContext context, Client client) {
+    showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+              title: Text("are you sure you want to delete this item?"),
+              content:
+                  Text("The element " + client.name + " will be eliminated"),
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      setState(() {
+                        this.clients.remove(client);
+                        Navigator.pop(context);
+                      });
+                    },
+                    child:
+                        Text("Eliminate", style: TextStyle(color: Colors.red))),
+                TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: Text("Cancel", style: TextStyle(color: Colors.blue)))
+              ],
+            ));
   }
 }
 

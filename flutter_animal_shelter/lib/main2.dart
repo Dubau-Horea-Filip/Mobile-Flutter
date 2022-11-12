@@ -14,6 +14,7 @@ class Shelter extends StatelessWidget{
   Widget build (BuildContext context)
   {
     return  MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: "Shelter",
       home: MyHomePage("context"),
     );
