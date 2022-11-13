@@ -9,14 +9,18 @@ class addPet extends StatefulWidget {
 
 class _addPet extends State<addPet> {
   late TextEditingController controllerName;
-  late TextEditingController controllerSurnameName;
-  late TextEditingController controllerNumber;
+  late TextEditingController controllerAge;
+  late TextEditingController controllerSpecies;
+  late TextEditingController controllerBehaviour;
+  late TextEditingController controllerMD;
 
   @override
   void initState() {
     controllerName = new TextEditingController();
-    controllerSurnameName = new TextEditingController();
-    controllerNumber = new TextEditingController();
+    controllerAge = new TextEditingController();
+    controllerSpecies = new TextEditingController();
+    controllerBehaviour = new TextEditingController();
+    controllerMD = new TextEditingController();
     super.initState();
   }
 
@@ -29,18 +33,35 @@ class _addPet extends State<addPet> {
       body: ListView(
         children: [
           TextBox(controllerName, "Name"),
-          TextBox(controllerSurnameName, "Surname"),
-          TextBox(controllerNumber, "Number"),
+          TextBox(controllerAge, "age"),
+          TextBox(controllerSpecies, "species"),
+          TextBox(controllerBehaviour, "behaviour"),
+          TextBox(controllerMD, "Mediacl Records"),
           ElevatedButton(
               onPressed: () {
                 String name = controllerName.text;
-                String phone = controllerNumber.text;
-                String Surname = controllerSurnameName.text;
-                if (name.isNotEmpty && Surname.isNotEmpty && phone.isNotEmpty) {
-                  Navigator.pop(context, new Client(name, Surname, phone));
+                String age = controllerAge.text;
+                String species = controllerSpecies.text;
+                String behaviour = controllerBehaviour.text;
+                String md = controllerMD.text;
+                if (name.isNotEmpty &&
+                    age.isNotEmpty &&
+                    species.isNotEmpty &&
+                    behaviour.isNotEmpty &&
+                    md.isNotEmpty) {
+                  Navigator.pop(
+                      context, new Pet(name, age, species, behaviour, md));
+                } else {
+                  showDialog(
+                      context: context,
+                      builder: (_) => AlertDialog(
+                            //title: Text("opa"),
+                            content: Text(
+                                "All filds shoud be filled and age shoud be a number"),
+                          ));
                 }
               },
-              child: Text("add object"))
+              child: Text("add pet"))
         ],
       ),
     );

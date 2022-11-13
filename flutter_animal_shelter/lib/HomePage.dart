@@ -20,10 +20,10 @@ class Test extends State<MyHomePage> {
 }
 
 class _MyhomePage extends State<MyHomePage> {
-  List<Client> clients = [
-    Client("Filip", "Dubau", "79"),
-    Client("Iulian", "Deac", "78"),
-    Client("Diana", "Dumitru", "77"),
+  List<Pet> clients = [
+    Pet("Rio", "2", "Orange Tabby cat", "vaccinated", "needy"),
+    Pet("Fio", "3", "cat", "unknow", "nice"),
+    Pet("Max", "1", "dog", "vaccinated", "playfull"),
   ];
 
   @override
@@ -52,16 +52,17 @@ class _MyhomePage extends State<MyHomePage> {
                 });
               },
               onLongPress: () {
-                removeObject(context, clients[index]);
+                removeObject(context, index, clients[index].name);
               },
-              title: Text(clients[index].name + " " + clients[index].Surname),
-              subtitle: Text(clients[index].phone),
+              title: Text(clients[index].name),
+              subtitle:
+                  Text(clients[index].species + "\n" + clients[index].age),
               leading: CircleAvatar(
                 child: Text(clients[index].name.substring(0, 1)),
               ),
               trailing: Icon(
-                Icons.call,
-                color: Colors.red,
+                Icons.info,
+                color: Colors.blue,
               ),
             );
           }),
@@ -83,18 +84,17 @@ class _MyhomePage extends State<MyHomePage> {
     );
   }
 
-  removeObject(BuildContext context, Client client) {
+  removeObject(BuildContext context, var index, var name) {
     showDialog(
         context: context,
         builder: (_) => AlertDialog(
-              title: Text("are you sure you want to delete this item?"),
-              content:
-                  Text("The element " + client.name + " will be eliminated"),
+              title: Text("are you sure you want to delete this pet?"),
+              content: Text("The pet " + name + " will be eliminated"),
               actions: [
                 TextButton(
                     onPressed: () {
                       setState(() {
-                        this.clients.remove(client);
+                        this.clients.removeAt(index);
                         Navigator.pop(context);
                       });
                     },
@@ -110,9 +110,18 @@ class _MyhomePage extends State<MyHomePage> {
   }
 }
 
-class Client {
+class Pet {
   var name;
-  var Surname;
-  var phone;
-  Client(this.name, this.Surname, this.phone);
+  var age;
+  var species;
+  var behaviour;
+  var medical_records;
+
+  Pet(String name, String age, String species, String beahaviour, String MD) {
+    this.name = name;
+    this.age = age;
+    this.species = species;
+    this.behaviour = beahaviour;
+    this.medical_records = MD;
+  }
 }
