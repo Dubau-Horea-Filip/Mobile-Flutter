@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_animal_shelter/HomePage.dart';
 import 'package:flutter_animal_shelter/textbox.dart';
 
 import 'models/Pet_model.dart';
 
+// ignore: camel_case_types
 class addPet extends StatefulWidget {
+  const addPet({super.key});
   @override
   State<StatefulWidget> createState() => _addPet();
 }
 
+// ignore: camel_case_types
 class _addPet extends State<addPet> {
   late TextEditingController controllerName;
   late TextEditingController controllerSpecies;
@@ -18,11 +20,11 @@ class _addPet extends State<addPet> {
 
   @override
   void initState() {
-    controllerName = new TextEditingController();
-    controllerAge = new TextEditingController();
-    controllerSpecies = new TextEditingController();
-    controllerBehaviour = new TextEditingController();
-    controllerMD = new TextEditingController();
+    controllerName =  TextEditingController();
+    controllerAge =  TextEditingController();
+    controllerSpecies =  TextEditingController();
+    controllerBehaviour =  TextEditingController();
+    controllerMD =  TextEditingController();
     super.initState();
   }
 
@@ -30,7 +32,7 @@ class _addPet extends State<addPet> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("add an object"),
+        title: const Text("add an object"),
       ),
       body: ListView(
         children: [
@@ -64,13 +66,14 @@ class _addPet extends State<addPet> {
                           ));
                 }
               },
-              child: Text("add pet"))
+              child: const Text("add pet"))
         ],
       ),
     );
   } //build
 
   bool _isNumeric(String str) {
+    // ignore: unnecessary_null_comparison
     if (str == null) {
       return false;
     }

@@ -4,32 +4,30 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animal_shelter/Update.dart';
 import 'package:flutter_animal_shelter/add.dart';
 import 'package:flutter_animal_shelter/messageResponse.dart';
-import 'database/sql_helper.dart';
+import 'Services/Database_Helper.dart';
 import 'models/Pet_model.dart';
 
 class MyHomePage extends StatefulWidget {
   final String _title;
 
-  MyHomePage(this._title);
+  const MyHomePage(this._title, {super.key});
 
   @override
   State<StatefulWidget> createState() => _MyhomePage();
 }
 
-class _MyhomePage extends State<MyHomePage>  {
-
-
+class _MyhomePage extends State<MyHomePage> {
   // List<Pet> _pets = [
   //   Pet("Rio", "2", "Orange Tabby cat", "vaccinated", "needy"),
   //   Pet("Fio", "3", "cat", "unknow", "nice"),
   //   Pet("Max", "1", "dog", "vaccinated", "playfull"),
   // ];
 
-   List<Pet> _pets = [];
+  List<Pet> _pets = [];
 
   // This function is used to fetch all data from the database
   void _refreshJournals() async {
-    final data = await SQLHelper.getItems();
+    final data = await DataBaseHelper.getPets();
     setState(() {
       _pets = data as List<Pet>;
     });
@@ -80,13 +78,12 @@ class _MyhomePage extends State<MyHomePage>  {
           }),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (_) => addPet()))
+          Navigator.push(context, MaterialPageRoute(builder: (_) => const addPet()))
               .then((Object) {
             if (Object != null) {
               setState(() {
                 Pet ob = Object;
-                SQLHelper.createItem(ob.name, Object.age, Object.species,
-                    ob.behaviour, ob.medical_records);
+                DataBaseHelper.addPet(ob);
                 _refreshJournals();
                 //clients.add(Object);
                 messageRrsponse(context, Object.name + " was added");
@@ -115,15 +112,15 @@ class _MyhomePage extends State<MyHomePage>  {
                         Navigator.pop(context);
                       });
                     },
-                    child:const
-                        Text("Eliminate", style: TextStyle(color: Colors.red))),
+                    child: const Text("Eliminate",
+                        style: TextStyle(color: Colors.red))),
                 TextButton(
                     onPressed: () {
                       Navigator.pop(context);
                     },
-                    child:const Text("Cancel", style: TextStyle(color: Colors.blue)))
+                    child: const Text("Cancel",
+                        style: TextStyle(color: Colors.blue)))
               ],
             ));
   }
 }
-

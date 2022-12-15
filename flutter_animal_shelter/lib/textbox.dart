@@ -1,23 +1,22 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class TextBox extends StatelessWidget {
   final String label;
   final TextEditingController controller;
 
-  TextBox(this.controller, this.label);
+  const TextBox(this.controller, this.label, {super.key});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(15.0),
+      padding: const EdgeInsets.all(15.0),
       child: TextField(
-        controller: this.controller,
+        controller: controller,
         decoration: InputDecoration(
             filled: true,
-            labelText: this.label,
+            labelText: label,
             suffix: GestureDetector(
-              child: Icon(Icons.close),
+              child: const Icon(Icons.close),
               onTap: () {
                 controller.clear();
               },
