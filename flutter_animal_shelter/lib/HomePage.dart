@@ -1,30 +1,45 @@
-// ignore_for_file: file_names
+// ignore_for_file: file_names, non_constant_identifier_names, avoid_types_as_parameter_names
 
 import 'package:flutter/material.dart';
 import 'package:flutter_animal_shelter/Update.dart';
 import 'package:flutter_animal_shelter/add.dart';
 import 'package:flutter_animal_shelter/messageResponse.dart';
+import 'database/sql_helper.dart';
+import 'models/Pet_model.dart';
 
 class MyHomePage extends StatefulWidget {
   final String _title;
+
   MyHomePage(this._title);
 
   @override
   State<StatefulWidget> createState() => _MyhomePage();
 }
 
-class Test extends State<MyHomePage> {
-  Widget build(BuildContext context) {
-    return Scaffold(appBar: AppBar(title: Text(widget._title)));
-  }
-}
+class _MyhomePage extends State<MyHomePage>  {
 
-class _MyhomePage extends State<MyHomePage> {
-  List<Pet> clients = [
-    Pet("Rio", "2", "Orange Tabby cat", "vaccinated", "needy"),
-    Pet("Fio", "3", "cat", "unknow", "nice"),
-    Pet("Max", "1", "dog", "vaccinated", "playfull"),
-  ];
+
+  // List<Pet> _pets = [
+  //   Pet("Rio", "2", "Orange Tabby cat", "vaccinated", "needy"),
+  //   Pet("Fio", "3", "cat", "unknow", "nice"),
+  //   Pet("Max", "1", "dog", "vaccinated", "playfull"),
+  // ];
+
+   List<Pet> _pets = [];
+
+  // This function is used to fetch all data from the database
+  void _refreshJournals() async {
+    final data = await SQLHelper.getItems();
+    setState(() {
+      _pets = data as List<Pet>;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _refreshJournals(); // Loading the diary when the app starts
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,34 +48,31 @@ class _MyhomePage extends State<MyHomePage> {
         title: Text(widget._title),
       ),
       body: ListView.builder(
-          itemCount: clients.length,
+          itemCount: _pets.length,
           itemBuilder: (context, index) {
             return ListTile(
               onTap: () {
-                Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (_) => Update(clients[index])))
+                Navigator.push(context,
+                        MaterialPageRoute(builder: (_) => Update(_pets[index])))
                     .then((newObject) {
                   if (newObject != null) {
                     setState(() {
-                      clients.removeAt(index);
-                      clients.insert(index, newObject);
-                      MessageRrsponse(context, newObject.name + " was updated");
+                      _pets.removeAt(index);
+                      _pets.insert(index, newObject);
+                      messageRrsponse(context, newObject.name + " was updated");
                     });
                   }
                 });
               },
               onLongPress: () {
-                removeObject(context, index, clients[index].name);
+                removeObject(context, index, _pets[index].name);
               },
-              title: Text(clients[index].name),
-              subtitle:
-                  Text(clients[index].species + "\n" + clients[index].age),
+              title: Text(_pets[index].name),
+              subtitle: Text("${_pets[index].species}\n${_pets[index].age}"),
               leading: CircleAvatar(
-                child: Text(clients[index].name.substring(0, 1)),
+                child: Text(_pets[index].name.substring(0, 1)),
               ),
-              trailing: Icon(
+              trailing: const Icon(
                 Icons.info,
                 color: Colors.blue,
               ),
@@ -72,14 +84,18 @@ class _MyhomePage extends State<MyHomePage> {
               .then((Object) {
             if (Object != null) {
               setState(() {
-                clients.add(Object);
-                MessageRrsponse(context, Object.name + " was added");
+                Pet ob = Object;
+                SQLHelper.createItem(ob.name, Object.age, Object.species,
+                    ob.behaviour, ob.medical_records);
+                _refreshJournals();
+                //clients.add(Object);
+                messageRrsponse(context, Object.name + " was added");
               });
             }
           });
         },
         tooltip: "add",
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
       ),
     );
   }
@@ -88,40 +104,26 @@ class _MyhomePage extends State<MyHomePage> {
     showDialog(
         context: context,
         builder: (_) => AlertDialog(
-              title: Text("are you sure you want to delete this pet?"),
-              content: Text("The pet " + name + " will be eliminated"),
+              title: const Text("are you sure you want to delete this pet?"),
+              content: Text("The pet  $name will be eliminated"),
               actions: [
                 TextButton(
                     onPressed: () {
                       setState(() {
-                        this.clients.removeAt(index);
+                        _pets.removeAt(index);
+
                         Navigator.pop(context);
                       });
                     },
-                    child:
+                    child:const
                         Text("Eliminate", style: TextStyle(color: Colors.red))),
                 TextButton(
                     onPressed: () {
                       Navigator.pop(context);
                     },
-                    child: Text("Cancel", style: TextStyle(color: Colors.blue)))
+                    child:const Text("Cancel", style: TextStyle(color: Colors.blue)))
               ],
             ));
   }
 }
 
-class Pet {
-  var name;
-  var age;
-  var species;
-  var behaviour;
-  var medical_records;
-
-  Pet(String name, String age, String species, String beahaviour, String MD) {
-    this.name = name;
-    this.age = age;
-    this.species = species;
-    this.behaviour = beahaviour;
-    this.medical_records = MD;
-  }
-}

@@ -1,12 +1,14 @@
+// ignore_for_file: use_key_in_widget_constructors
+
 import 'package:flutter/material.dart';
 import 'package:flutter_animal_shelter/HomePage.dart';
+
 
 //void main() => runApp( Shelter());
 
 class Shelter extends StatelessWidget {
-  //const Shelter({super.key});
-
-  //const Shelter({super.key});
+  //DogService service;
+  //Shelter(DogService service);
 
   @override
   Widget build(BuildContext context) {

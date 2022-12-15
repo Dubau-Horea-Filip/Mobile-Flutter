@@ -1,11 +1,14 @@
+// ignore_for_file: file_names
+
 import 'package:flutter/material.dart';
-import 'package:flutter_animal_shelter/HomePage.dart';
 import 'package:flutter_animal_shelter/textbox.dart';
+
+import 'models/Pet_model.dart';
 
 class Update extends StatefulWidget {
   final Pet _pet;
 
-  const Update(this._pet);
+  const Update(this._pet, {super.key});
 
   @override
   State<StatefulWidget> createState() => _Update();
@@ -21,11 +24,11 @@ class _Update extends State<Update> {
   @override
   void initState() {
     Pet c = widget._pet;
-    controllerName = new TextEditingController(text: c.name);
-    controllerAge = new TextEditingController(text: c.age);
-    controllerSpecies = new TextEditingController(text: c.species);
-    controllerBehaviour = new TextEditingController(text: c.behaviour);
-    controllerMD = new TextEditingController(text: c.medical_records);
+    controllerName = TextEditingController(text: c.name);
+    controllerAge = TextEditingController(text: c.age.toString());
+    controllerSpecies = TextEditingController(text: c.species);
+    controllerBehaviour = TextEditingController(text: c.behaviour);
+    controllerMD = TextEditingController(text: c.medical_records);
     super.initState();
   }
 
@@ -33,7 +36,7 @@ class _Update extends State<Update> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Update Object"),
+        title: const Text("Update Object"),
       ),
       body: ListView(
         children: [
@@ -56,24 +59,31 @@ class _Update extends State<Update> {
                     behaviour.isNotEmpty &&
                     md.isNotEmpty) {
                   Navigator.pop(
-                      context, new Pet(name, age, species, behaviour, md));
+                      context,
+                      Pet(
+                          name: name,
+                          species: species,
+                          behaviour: behaviour,
+                          age: age,
+                          medical_records: md));
                 } else {
                   showDialog(
                       context: context,
-                      builder: (_) => AlertDialog(
+                      builder: (_) => const AlertDialog(
                             //title: Text("opa"),
                             content: Text(
                                 "All filds shoud be filled and age shoud be a number"),
                           ));
                 }
               },
-              child: Text("update pet"))
+              child: const Text("update pet"))
         ],
       ),
     );
   }
 
   bool _isNumeric(String str) {
+    // ignore: unnecessary_null_comparison
     if (str == null) {
       return false;
     }
