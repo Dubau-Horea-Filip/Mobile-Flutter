@@ -1,4 +1,4 @@
-// ignore_for_file: file_names, non_constant_identifier_names, avoid_types_as_parameter_names
+// ignore_for_file: file_names, non_constant_identifier_names, avoid_types_as_parameter_names, prefer_const_constructors
 
 import 'package:flutter/material.dart';
 import 'package:flutter_animal_shelter/Update.dart';
@@ -17,26 +17,64 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyhomePage extends State<MyHomePage> {
+  List<Pet> _pets = [];
+
+  // final List<Pet> _pets = [
+  //   Pet(
+  //       name: "Rio",
+  //       age: 2,
+  //       species: "Orange Tabby cat",
+  //       medical_records: "vaccinated",
+  //       behaviour: "needy"),
+  //   Pet(
+  //       name: "Fio",
+  //       age: 3,
+  //       species: "cat",
+  //       medical_records: "unknow",
+  //       behaviour: "nice"),
+  //   Pet(
+  //       name: "Max",
+  //       age: 1,
+  //       species: "dog",
+  //       medical_records: "vaccinated",
+  //       behaviour: "playfull"),
+  // ];
+
   // List<Pet> _pets = [
   //   Pet("Rio", "2", "Orange Tabby cat", "vaccinated", "needy"),
   //   Pet("Fio", "3", "cat", "unknow", "nice"),
   //   Pet("Max", "1", "dog", "vaccinated", "playfull"),
   // ];
 
-  List<Pet> _pets = [];
-
-  // This function is used to fetch all data from the database
-  void _refreshJournals() async {
+  //This function is used to fetch all data from the database
+  void _refresh() async {
     final data = await DataBaseHelper.getPets();
     setState(() {
-      _pets = data as List<Pet>;
+      _pets = data!;
     });
   }
 
   @override
   void initState() {
     super.initState();
-    _refreshJournals(); // Loading the diary when the app starts
+
+    DataBaseHelper.addPet(Pet(
+        name: "Rio",
+        age: 2,
+        species: "Orange Tabby cat",
+        MD: "vaccinated",
+        behaviour: "needy",
+        id: 1));
+
+    DataBaseHelper.addPet(Pet(
+        name: "Fio",
+        age: 3,
+        species: "cat",
+        MD: "vaccinated",
+        behaviour: "nice",
+        id: 2));
+
+    _refresh(); // Loading the diary when the app starts
   }
 
   @override
@@ -55,8 +93,10 @@ class _MyhomePage extends State<MyHomePage> {
                     .then((newObject) {
                   if (newObject != null) {
                     setState(() {
-                      _pets.removeAt(index);
-                      _pets.insert(index, newObject);
+                      DataBaseHelper.updatePet(_pets[index]);
+                      _refresh();
+                      // _pets.removeAt(index);
+                      //_pets.insert(index, newObject);
                       messageRrsponse(context, newObject.name + " was updated");
                     });
                   }
@@ -78,14 +118,15 @@ class _MyhomePage extends State<MyHomePage> {
           }),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (_) => const addPet()))
+          Navigator.push(
+                  context, MaterialPageRoute(builder: (_) => const addPet()))
               .then((Object) {
             if (Object != null) {
-              setState(() {
-                Pet ob = Object;
-                DataBaseHelper.addPet(ob);
-                _refreshJournals();
-                //clients.add(Object);
+              setState(() async {
+                await DataBaseHelper.addPet(Object);
+                _refresh();
+                _pets.add(Object);
+                // ignore: use_build_context_synchronously
                 messageRrsponse(context, Object.name + " was added");
               });
             }
@@ -107,8 +148,9 @@ class _MyhomePage extends State<MyHomePage> {
                 TextButton(
                     onPressed: () {
                       setState(() {
-                        _pets.removeAt(index);
-
+                        DataBaseHelper.deletePet(_pets[index]);
+                        _refresh();
+                        // _pets.removeAt(index);
                         Navigator.pop(context);
                       });
                     },
@@ -116,6 +158,7 @@ class _MyhomePage extends State<MyHomePage> {
                         style: TextStyle(color: Colors.red))),
                 TextButton(
                     onPressed: () {
+                      _refresh();
                       Navigator.pop(context);
                     },
                     child: const Text("Cancel",
@@ -124,3 +167,19 @@ class _MyhomePage extends State<MyHomePage> {
             ));
   }
 }
+
+// class Pet {
+//   var name;
+//   var age;
+//   var species;
+//   var behaviour;
+//   var medical_records;
+
+//   Pet(String name, String age, String species, String beahaviour, String MD) {
+//     this.name = name;
+//     this.age = age;
+//     this.species = species;
+//     this.behaviour = beahaviour;
+//     this.medical_records = MD;
+//   }
+// }

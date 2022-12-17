@@ -11,7 +11,7 @@ class DataBaseHelper {
 
   static Future<Database> _getDB() async {
     return openDatabase(join(await getDatabasesPath(), _DBname),
-        onCreate: (db, version) async => await db.execute("""CREATE TABLE pets(
+        onCreate: (db, version) async => await db.execute("""CREATE TABLE Pets(
         id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
         name TEXT,
         age INTEGER,

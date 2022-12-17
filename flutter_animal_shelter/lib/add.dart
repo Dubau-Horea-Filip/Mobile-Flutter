@@ -5,13 +5,16 @@ import 'models/Pet_model.dart';
 
 // ignore: camel_case_types
 class addPet extends StatefulWidget {
-  const addPet({super.key});
+
+  final Pet? pet;
+  const addPet({super.key, this.pet});
   @override
   State<StatefulWidget> createState() => _addPet();
 }
 
 // ignore: camel_case_types
 class _addPet extends State<addPet> {
+
   late TextEditingController controllerName;
   late TextEditingController controllerSpecies;
   late TextEditingController controllerAge;
@@ -20,13 +23,16 @@ class _addPet extends State<addPet> {
 
   @override
   void initState() {
-    controllerName =  TextEditingController();
-    controllerAge =  TextEditingController();
-    controllerSpecies =  TextEditingController();
-    controllerBehaviour =  TextEditingController();
-    controllerMD =  TextEditingController();
+    controllerName = TextEditingController();
+    controllerAge = TextEditingController();
+    controllerSpecies = TextEditingController();
+    controllerBehaviour = TextEditingController();
+    controllerMD = TextEditingController();
     super.initState();
   }
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +61,15 @@ class _addPet extends State<addPet> {
                     behaviour.isNotEmpty &&
                     md.isNotEmpty) {
                   Navigator.pop(
-                      context, Pet(name:name, species:species, behaviour:behaviour, age: age, medical_records: md));
+                      //context,Pet(name, age, species, behaviour, md));
+                      context,
+                      Pet(
+                          name: name,
+                          species: species,
+                          behaviour: behaviour,
+                          age: int.parse(age),
+                          MD: md,
+                      id: widget.pet?.id));
                 } else {
                   showDialog(
                       context: context,

@@ -1,19 +1,35 @@
 // ignore_for_file: non_constant_identifier_names, file_names
 
-class Pet {
-  final int? id;
-  final String name = "";
-  final int? age = 0;
-  final String species = "";
-  final String behaviour = "";
-  final String medical_records = "";
+// class Pet {
+//   var name;
+//   var age;
+//   var species;
+//   var behaviour;
+//   var medical_records;
 
-  const Pet(
-      {required age,
-      required behaviour,
-      required name,
-      required medical_records,
-      required species,
+//   Pet(String name, String age, String species, String beahaviour, String MD) {
+//     this.name = name;
+//     this.age = age;
+//     this.species = species;
+//     this.behaviour = beahaviour;
+//     this.medical_records = MD;
+//   }
+// }
+
+class Pet {
+  int? id;
+  String name = "";
+  int? age = 0;
+  String species = "";
+  String behaviour = "";
+  String MD = "";
+
+  Pet(
+      {required this.name,
+      required this.age,
+      required this.behaviour,
+      required this.MD,
+      required this.species,
       this.id});
   factory Pet.fromJson(Map<String, dynamic> json) => Pet(
       id: json['id'],
@@ -21,7 +37,7 @@ class Pet {
       age: json['age'],
       species: json['species'],
       behaviour: json['behaviour'],
-      medical_records: json['medical_records']);
+      MD: json['MD']);
 
   Map<String, dynamic> toJson() => {
         'id': id,
@@ -29,6 +45,6 @@ class Pet {
         'age': age,
         'species': species,
         'behaviour': behaviour,
-        'medical_records': medical_records
+        'MD': MD
       };
 }

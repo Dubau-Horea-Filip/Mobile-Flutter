@@ -3,12 +3,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animal_shelter/textbox.dart';
 
+
+
 import 'models/Pet_model.dart';
 
 class Update extends StatefulWidget {
   final Pet _pet;
 
-  const Update(this._pet, {super.key});
+  const Update(
+    this._pet, {super.key}
+  );
 
   @override
   State<StatefulWidget> createState() => _Update();
@@ -28,7 +32,7 @@ class _Update extends State<Update> {
     controllerAge = TextEditingController(text: c.age.toString());
     controllerSpecies = TextEditingController(text: c.species);
     controllerBehaviour = TextEditingController(text: c.behaviour);
-    controllerMD = TextEditingController(text: c.medical_records);
+    controllerMD = TextEditingController(text: c.MD);
     super.initState();
   }
 
@@ -60,12 +64,13 @@ class _Update extends State<Update> {
                     md.isNotEmpty) {
                   Navigator.pop(
                       context,
+                      //Pet(name, age, species, behaviour, md));
                       Pet(
                           name: name,
                           species: species,
                           behaviour: behaviour,
-                          age: age,
-                          medical_records: md));
+                          age: int.parse(age),
+                          MD: md));
                 } else {
                   showDialog(
                       context: context,

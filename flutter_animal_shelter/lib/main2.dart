@@ -12,7 +12,7 @@ class Shelter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
       title: "Shelter",
       home: MyHomePage("Pets"),
