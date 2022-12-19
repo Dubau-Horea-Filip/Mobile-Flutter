@@ -1,21 +1,4 @@
 // ignore_for_file: non_constant_identifier_names, file_names
-
-// class Pet {
-//   var name;
-//   var age;
-//   var species;
-//   var behaviour;
-//   var medical_records;
-
-//   Pet(String name, String age, String species, String beahaviour, String MD) {
-//     this.name = name;
-//     this.age = age;
-//     this.species = species;
-//     this.behaviour = beahaviour;
-//     this.medical_records = MD;
-//   }
-// }
-
 class Pet {
   int? id;
   String name = "";
@@ -31,6 +14,7 @@ class Pet {
       required this.MD,
       required this.species,
       this.id});
+
   factory Pet.fromJson(Map<String, dynamic> json) => Pet(
       id: json['id'],
       name: json['name'],
@@ -48,3 +32,19 @@ class Pet {
         'MD': MD
       };
 }
+
+// class Pet {
+//   var name;
+//   var age;
+//   var species;
+//   var behaviour;
+//   var medical_records;
+
+//   Pet(String name, String age, String species, String beahaviour, String MD) {
+//     this.name = name;
+//     this.age = age;
+//     this.species = species;
+//     this.behaviour = beahaviour;
+//     this.medical_records = MD;
+//   }
+// }

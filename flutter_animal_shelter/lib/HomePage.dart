@@ -58,21 +58,21 @@ class _MyhomePage extends State<MyHomePage> {
   void initState() {
     super.initState();
 
-    DataBaseHelper.addPet(Pet(
-        name: "Rio",
-        age: 2,
-        species: "Orange Tabby cat",
-        MD: "vaccinated",
-        behaviour: "needy",
-        id: 1));
-
-    DataBaseHelper.addPet(Pet(
-        name: "Fio",
-        age: 3,
-        species: "cat",
-        MD: "vaccinated",
-        behaviour: "nice",
-        id: 2));
+    // DataBaseHelper.addPet(Pet(
+    //     name: "Rio",
+    //     age: 2,
+    //     species: "Orange Tabby cat",
+    //     MD: "vaccinated",
+    //     behaviour: "needy",
+    //     id: 1));
+    //
+    // DataBaseHelper.addPet(Pet(
+    //     name: "Fio",
+    //     age: 3,
+    //     species: "cat",
+    //     MD: "vaccinated",
+    //     behaviour: "nice",
+    //     id: 2));
 
     _refresh(); // Loading the diary when the app starts
   }
@@ -93,7 +93,7 @@ class _MyhomePage extends State<MyHomePage> {
                     .then((newObject) {
                   if (newObject != null) {
                     setState(() {
-                      DataBaseHelper.updatePet(_pets[index]);
+                      DataBaseHelper.updatePet(newObject);
                       _refresh();
                       // _pets.removeAt(index);
                       //_pets.insert(index, newObject);
@@ -167,19 +167,3 @@ class _MyhomePage extends State<MyHomePage> {
             ));
   }
 }
-
-// class Pet {
-//   var name;
-//   var age;
-//   var species;
-//   var behaviour;
-//   var medical_records;
-
-//   Pet(String name, String age, String species, String beahaviour, String MD) {
-//     this.name = name;
-//     this.age = age;
-//     this.species = species;
-//     this.behaviour = beahaviour;
-//     this.medical_records = MD;
-//   }
-// }

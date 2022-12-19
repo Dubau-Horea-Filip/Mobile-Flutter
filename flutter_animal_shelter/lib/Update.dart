@@ -66,6 +66,7 @@ class _Update extends State<Update> {
                       context,
                       //Pet(name, age, species, behaviour, md));
                       Pet(
+                          id: widget._pet.id,
                           name: name,
                           species: species,
                           behaviour: behaviour,
