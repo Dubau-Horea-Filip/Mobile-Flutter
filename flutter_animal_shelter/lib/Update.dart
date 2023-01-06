@@ -32,7 +32,7 @@ class _Update extends State<Update> {
     controllerAge = TextEditingController(text: c.age.toString());
     controllerSpecies = TextEditingController(text: c.species);
     controllerBehaviour = TextEditingController(text: c.behaviour);
-    controllerMD = TextEditingController(text: c.MD);
+    controllerMD = TextEditingController(text: c.md);
     super.initState();
   }
 
@@ -71,7 +71,7 @@ class _Update extends State<Update> {
                           species: species,
                           behaviour: behaviour,
                           age: int.parse(age),
-                          MD: md));
+                          md: md));
                 } else {
                   showDialog(
                       context: context,

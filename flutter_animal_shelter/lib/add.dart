@@ -68,7 +68,7 @@ class _addPet extends State<addPet> {
                           species: species,
                           behaviour: behaviour,
                           age: int.parse(age),
-                          MD: md,
+                          md: md,
                       id: widget.pet?.id));
                 } else {
                   showDialog(

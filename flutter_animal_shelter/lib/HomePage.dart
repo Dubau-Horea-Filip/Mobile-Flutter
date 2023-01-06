@@ -1,11 +1,13 @@
 // ignore_for_file: file_names, non_constant_identifier_names, avoid_types_as_parameter_names, prefer_const_constructors
 
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_animal_shelter/Update.dart';
 import 'package:flutter_animal_shelter/add.dart';
 import 'package:flutter_animal_shelter/messageResponse.dart';
 import 'Services/Database_Helper.dart';
 import 'models/Pet_model.dart';
+import 'package:http/http.dart' as http;
 
 class MyHomePage extends StatefulWidget {
   final String _title;
@@ -48,10 +50,43 @@ class _MyhomePage extends State<MyHomePage> {
 
   //This function is used to fetch all data from the database
   void _refresh() async {
-    final data = await DataBaseHelper.getPets();
+
+    var client = http.Client();
+    const url = 'http://10.0.2.2:9191/pets';
+    final uri =Uri.parse(url) ;
+    final response = await client.get(uri);
+    final body = response.body;
+    final json = jsonDecode(body);
+    List<Pet> _data = [];
     setState(() {
-      _pets = data!;
+      List<dynamic> pets = [];
+      pets = json;
+      var size = pets.length;
+      var index = 0;
+      for (index; index < size; index++) {
+        final name = json[index]['name'];
+        final id = json[index]['id'];
+        final age = json[index]['age'];
+        final species = json[index]['species'];
+        final behaviour = json[index]['behaviour'];
+        final md = json[index]['md'];
+        Pet pet = Pet(
+            id: id,
+            name: name,
+            age: age,
+            behaviour: behaviour,
+            md: md,
+            species: species);
+        _data.add(pet);
+      }
+      _pets = _data;
     });
+
+
+    // final data = await DataBaseHelper.getPets();
+    // setState(() {
+    //   _pets = data!;
+    // });
   }
 
   @override
@@ -123,7 +158,8 @@ class _MyhomePage extends State<MyHomePage> {
               .then((Object) {
             if (Object != null) {
               setState(() async {
-                await DataBaseHelper.addPet(Object);
+                //await
+                DataBaseHelper.addPet(Object);
                 _refresh();
                 _pets.add(Object);
                 // ignore: use_build_context_synchronously

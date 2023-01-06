@@ -5,13 +5,13 @@ class Pet {
   int? age = 0;
   String species = "";
   String behaviour = "";
-  String MD = "";
+  String md = "";
 
   Pet(
       {required this.name,
       required this.age,
       required this.behaviour,
-      required this.MD,
+      required this.md,
       required this.species,
       this.id});
 
@@ -21,7 +21,7 @@ class Pet {
       age: json['age'],
       species: json['species'],
       behaviour: json['behaviour'],
-      MD: json['MD']);
+      md: json['MD']);
 
   Map<String, dynamic> toJson() => {
         'id': id,
@@ -29,7 +29,7 @@ class Pet {
         'age': age,
         'species': species,
         'behaviour': behaviour,
-        'MD': MD
+        'MD': md
       };
 }
 
