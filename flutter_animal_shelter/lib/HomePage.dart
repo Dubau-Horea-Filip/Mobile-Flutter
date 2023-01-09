@@ -50,10 +50,9 @@ class _MyhomePage extends State<MyHomePage> {
 
   //This function is used to fetch all data from the database
   void _refresh() async {
-
     var client = http.Client();
     const url = 'http://10.0.2.2:9191/pets';
-    final uri =Uri.parse(url) ;
+    final uri = Uri.parse(url);
     final response = await client.get(uri);
     final body = response.body;
     final json = jsonDecode(body);
@@ -88,6 +87,14 @@ class _MyhomePage extends State<MyHomePage> {
     //   _pets = data!;
     // });
   }
+
+  void refresh() async {
+    setState(() {
+      List<dynamic> pets = [];
+      List<Pet> _data = _pets;
+    });
+        }
+
 
   @override
   void initState() {
@@ -124,14 +131,15 @@ class _MyhomePage extends State<MyHomePage> {
             return ListTile(
               onTap: () {
                 Navigator.push(context,
-                        MaterialPageRoute(builder: (_) => Update(_pets[index])))
+                    MaterialPageRoute(builder: (_) => Update(_pets[index])))
                     .then((newObject) {
                   if (newObject != null) {
-                    setState(() {
-                      DataBaseHelper.updatePet(newObject);
-                      _refresh();
-                      // _pets.removeAt(index);
-                      //_pets.insert(index, newObject);
+                    setState(() async {
+                      await DataBaseHelper.updatePet(newObject);
+                      //_refresh();
+                      refresh();
+                      _pets.removeAt(index);
+                      _pets.insert(index, newObject);
                       messageRrsponse(context, newObject.name + " was updated");
                     });
                   }
@@ -154,13 +162,13 @@ class _MyhomePage extends State<MyHomePage> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(
-                  context, MaterialPageRoute(builder: (_) => const addPet()))
+              context, MaterialPageRoute(builder: (_) => const addPet()))
               .then((Object) {
             if (Object != null) {
               setState(() async {
-                //await
-                DataBaseHelper.addPet(Object);
-                _refresh();
+                await DataBaseHelper.addPet(Object);
+                //_refresh();
+                refresh();
                 _pets.add(Object);
                 // ignore: use_build_context_synchronously
                 messageRrsponse(context, Object.name + " was added");
@@ -177,16 +185,18 @@ class _MyhomePage extends State<MyHomePage> {
   removeObject(BuildContext context, var index, var name) {
     showDialog(
         context: context,
-        builder: (_) => AlertDialog(
+        builder: (_) =>
+            AlertDialog(
               title: const Text("are you sure you want to delete this pet?"),
               content: Text("The pet  $name will be eliminated"),
               actions: [
                 TextButton(
                     onPressed: () {
-                      setState(() {
-                        DataBaseHelper.deletePet(_pets[index]);
-                        _refresh();
-                        // _pets.removeAt(index);
+                      setState(() async {
+                        await DataBaseHelper.deletePet(_pets[index]);
+                        //_refresh();
+                        refresh();
+                        _pets.removeAt(index);
                         Navigator.pop(context);
                       });
                     },
