@@ -7,6 +7,6 @@ messageRrsponse(BuildContext context, String name) {
       context: context,
       builder: (_) => AlertDialog(
             //title: Text("opa"),
-            content: Text("alo $name"),
+            content: Text(" $name"),
           ));
 }

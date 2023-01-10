@@ -55,7 +55,7 @@ class _MyhomePage extends State<MyHomePage> {
       var client = http.Client();
       const url = 'http://10.0.2.2:9191/pets';
       final uri = Uri.parse(url);
-      final response = await client.get(uri);
+      final response = await client.get(uri).timeout(const Duration(seconds: 1));
       final body = response.body;
       final json = jsonDecode(body);
       List<Pet> _data = [];

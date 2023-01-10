@@ -41,7 +41,7 @@ class DataBaseHelper {
         "species": pet.species,
         "behaviour": pet.behaviour,
         "md": pet.md
-      });
+      }).timeout(const Duration(seconds: 1));
       print(response);
 
       if (response.statusCode != 200)
@@ -72,7 +72,7 @@ class DataBaseHelper {
       "species": pet.species,
       "behaviour": pet.behaviour,
       "md": pet.md
-    });
+    }).timeout(const Duration(seconds: 1));
 
     print(response);
     } //end try
@@ -92,7 +92,7 @@ class DataBaseHelper {
   static Future <void> deletePet(Pet pet) async {
     try {
       var response =
-      await http.delete(Uri.parse('http://10.0.2.2:9191/delete/${pet.id}'));
+      await http.delete(Uri.parse('http://10.0.2.2:9191/delete/${pet.id}')).timeout(const Duration(seconds: 1));
       print(response);
     }
     catch  (ex)
