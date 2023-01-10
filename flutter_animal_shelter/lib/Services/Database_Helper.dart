@@ -6,7 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:http/http.dart' as http;
+import '../ce.dart';
 import '../models/Pet_model.dart';
+
+
+
 
 class DataBaseHelper {
   static const int _version = 1;
@@ -39,25 +43,17 @@ class DataBaseHelper {
         "md": pet.md
       });
       print(response);
+
       if (response.statusCode != 200)
       {
-        AlertDialog(
-            title: const Text("There was an error while trying to reach the server "),
-            content: Text("The pet  coudn not be added"));
+        throw Exception("There was an error while trying to reach the server ");
       }
-    }
-    catch(e)
+
+    } //end try
+     catch  (ex)
     {
-      AlertDialog(
-          title: const Text("There was an error while trying to reach the server "),
-          content: Text("The pet  coudn not be added" ));
+      throw Database_Exception("Coudn't add pet ");
     }
-
-
-
-
-
-
 
     // final db = await _getDB();
     // return await db.insert("Pets", pet.toJson(),
@@ -66,6 +62,8 @@ class DataBaseHelper {
 
   //static Future<int> updatePet(Pet pet) async {
   static Future<void> updatePet(Pet pet) async {
+
+    try{
     var response =
         await http.put(Uri.parse('http://10.0.2.2:9191/updatePet'), body: {
       "id": pet.id.toString(),
@@ -77,6 +75,12 @@ class DataBaseHelper {
     });
 
     print(response);
+    } //end try
+    catch  (ex)
+    {
+      throw Database_Exception("There was an error while trying to update the pet ");
+    }
+
 
     // final db = await _getDB();
     // return await db.update("Pets", pet.toJson(),
@@ -86,17 +90,16 @@ class DataBaseHelper {
   }
 
   static Future <void> deletePet(Pet pet) async {
-    var response =
-        await http.delete(Uri.parse('http://10.0.2.2:9191/delete/${pet.id}'));
-
-    if (response.statusCode != 200)
+    try {
+      var response =
+      await http.delete(Uri.parse('http://10.0.2.2:9191/delete/${pet.id}'));
+      print(response);
+    }
+    catch  (ex)
     {
-          AlertDialog(
-              title: const Text("There was an error while trying to reach the server "),
-              content: Text("The pet  coudn not be eliminated"));
+      throw Database_Exception("There was an error while trying to delete the pet ");
     }
 
-    print(response);
 
     // final db = await _getDB();
     // return await db.delete("Pets", where: 'id = ?', whereArgs: [pet.id]);

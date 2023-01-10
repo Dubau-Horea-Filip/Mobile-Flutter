@@ -6,6 +6,7 @@ import 'package:flutter_animal_shelter/Update.dart';
 import 'package:flutter_animal_shelter/add.dart';
 import 'package:flutter_animal_shelter/messageResponse.dart';
 import 'Services/Database_Helper.dart';
+import 'ce.dart';
 import 'models/Pet_model.dart';
 import 'package:http/http.dart' as http;
 
@@ -50,37 +51,42 @@ class _MyhomePage extends State<MyHomePage> {
 
   //This function is used to fetch all data from the database
   void _refresh() async {
-    var client = http.Client();
-    const url = 'http://10.0.2.2:9191/pets';
-    final uri = Uri.parse(url);
-    final response = await client.get(uri);
-    final body = response.body;
-    final json = jsonDecode(body);
-    List<Pet> _data = [];
-    setState(() {
-      List<dynamic> pets = [];
-      pets = json;
-      var size = pets.length;
-      var index = 0;
-      for (index; index < size; index++) {
-        final name = json[index]['name'];
-        final id = json[index]['id'];
-        final age = json[index]['age'];
-        final species = json[index]['species'];
-        final behaviour = json[index]['behaviour'];
-        final md = json[index]['md'];
-        Pet pet = Pet(
-            id: id,
-            name: name,
-            age: age,
-            behaviour: behaviour,
-            md: md,
-            species: species);
-        _data.add(pet);
-      }
-      _pets = _data;
-    });
-
+    try {
+      var client = http.Client();
+      const url = 'http://10.0.2.2:9191/pets';
+      final uri = Uri.parse(url);
+      final response = await client.get(uri);
+      final body = response.body;
+      final json = jsonDecode(body);
+      List<Pet> _data = [];
+      setState(() {
+        List<dynamic> pets = [];
+        pets = json;
+        var size = pets.length;
+        var index = 0;
+        for (index; index < size; index++) {
+          final name = json[index]['name'];
+          final id = json[index]['id'];
+          final age = json[index]['age'];
+          final species = json[index]['species'];
+          final behaviour = json[index]['behaviour'];
+          final md = json[index]['md'];
+          Pet pet = Pet(
+              id: id,
+              name: name,
+              age: age,
+              behaviour: behaviour,
+              md: md,
+              species: species);
+          _data.add(pet);
+        }
+        _pets = _data;
+      });
+    } on Exception {
+      // log.severe(ex);
+      print("am intrat 1");
+      throw Exception("could not fetch data");
+    }
 
     // final data = await DataBaseHelper.getPets();
     // setState(() {
@@ -93,8 +99,7 @@ class _MyhomePage extends State<MyHomePage> {
       List<dynamic> pets = [];
       List<Pet> _data = _pets;
     });
-        }
-
+  }
 
   @override
   void initState() {
@@ -115,8 +120,20 @@ class _MyhomePage extends State<MyHomePage> {
     //     MD: "vaccinated",
     //     behaviour: "nice",
     //     id: 2));
-
-    _refresh(); // Loading the diary when the app starts
+    try {
+      _refresh(); // Loading the diary when the app starts
+    } catch (e) {
+      print("am intrat 2");
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+              title: const Text(
+                  "There was an error while trying to reach the server "),
+              content: Text(e.toString()));
+        },
+      );
+    }
   }
 
   @override
@@ -131,17 +148,31 @@ class _MyhomePage extends State<MyHomePage> {
             return ListTile(
               onTap: () {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (_) => Update(_pets[index])))
-                    .then((newObject) {
+                        MaterialPageRoute(builder: (_) => Update(_pets[index])))
+                    .then((newObject) async {
                   if (newObject != null) {
-                    setState(() async {
+                    try {
                       await DataBaseHelper.updatePet(newObject);
-                      //_refresh();
-                      refresh();
-                      _pets.removeAt(index);
-                      _pets.insert(index, newObject);
-                      messageRrsponse(context, newObject.name + " was updated");
-                    });
+                      setState(() async {
+                        //_refresh();
+                        refresh();
+                        _pets.removeAt(index);
+                        _pets.insert(index, newObject);
+                        messageRrsponse(
+                            context, newObject.name + " was updated");
+                      });
+                    } on Database_Exception catch (e) {
+                      print("am intrat");
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                              title: const Text(
+                                  "There was an error while trying to reach the server "),
+                              content: Text(e.cause.toString()));
+                        },
+                      );
+                    }
                   }
                 });
               },
@@ -162,17 +193,30 @@ class _MyhomePage extends State<MyHomePage> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(
-              context, MaterialPageRoute(builder: (_) => const addPet()))
-              .then((Object) {
+                  context, MaterialPageRoute(builder: (_) => const addPet()))
+              .then((Object) async {
             if (Object != null) {
-              setState(() async {
+              try {
                 await DataBaseHelper.addPet(Object);
-                //_refresh();
-                refresh();
-                _pets.add(Object);
-                // ignore: use_build_context_synchronously
-                messageRrsponse(context, Object.name + " was added");
-              });
+                setState(() async {
+                  //_refresh();
+                  refresh();
+                  _pets.add(Object);
+                  // ignore: use_build_context_synchronously
+                  messageRrsponse(context, Object.name + " was added");
+                });
+              } on Database_Exception catch (e) {
+                print("am intrat");
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                        title: const Text(
+                            "There was an error while trying to reach the server "),
+                        content: Text(e.cause.toString()));
+                  },
+                );
+              }
             }
           });
         },
@@ -185,20 +229,32 @@ class _MyhomePage extends State<MyHomePage> {
   removeObject(BuildContext context, var index, var name) {
     showDialog(
         context: context,
-        builder: (_) =>
-            AlertDialog(
+        builder: (_) => AlertDialog(
               title: const Text("are you sure you want to delete this pet?"),
               content: Text("The pet  $name will be eliminated"),
               actions: [
                 TextButton(
-                    onPressed: () {
-                      setState(() async {
+                    onPressed: () async {
+                      try {
                         await DataBaseHelper.deletePet(_pets[index]);
-                        //_refresh();
-                        refresh();
-                        _pets.removeAt(index);
-                        Navigator.pop(context);
-                      });
+                        setState(() async {
+                          //_refresh();
+                          refresh();
+                          _pets.removeAt(index);
+                          Navigator.pop(context);
+                        });
+                      } on Database_Exception catch (e) {
+                        print("am intrat");
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                                title: const Text(
+                                    "There was an error while trying to reach the server "),
+                                content: Text(e.cause.toString()));
+                          },
+                        );
+                      }
                     },
                     child: const Text("Eliminate",
                         style: TextStyle(color: Colors.red))),
